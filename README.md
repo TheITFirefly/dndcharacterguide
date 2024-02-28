@@ -3,3 +3,4 @@ This readme is meant to show that all of us have proper access to the git repo f
 
 ## Group members
 - Stephen Snow
+- Alex Olmsted
