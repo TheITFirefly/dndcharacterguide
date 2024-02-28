@@ -5,3 +5,4 @@ This readme is meant to show that all of us have proper access to the git repo f
 - Stephen Snow
 - Alex Olmsted
 - Thomas Noble
+- Zachary Hansen
