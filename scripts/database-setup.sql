@@ -4,7 +4,6 @@ CREATE TABLE Party
   Name VARCHAR(50) NOT NULL,
   PRIMARY KEY (ID)
 );
-
 CREATE TABLE Race
 (
   Name VARCHAR(50) NOT NULL,
@@ -13,7 +12,6 @@ CREATE TABLE Race
   PRIMARY KEY (RaceID),
   UNIQUE (Name)
 );
-
 CREATE TABLE Class
 (
   Name VARCHAR(50) NOT NULL,
@@ -22,7 +20,6 @@ CREATE TABLE Class
   PRIMARY KEY (ClassID),
   UNIQUE (Name)
 );
-
 CREATE TABLE Background
 (
   Name VARCHAR(50) NOT NULL,
@@ -31,17 +28,15 @@ CREATE TABLE Background
   PRIMARY KEY (BackgroundID),
   UNIQUE (Name)
 );
-
-CREATE TABLE User
+CREATE TABLE Users
 (
   username VARCHAR(25) NOT NULL,
   password VARCHAR(32) NOT NULL,
-  ID BIGINT,
+  ID BIGINT UNSIGNED,
   PRIMARY KEY (username),
   FOREIGN KEY (ID) REFERENCES Party(ID)
 );
-
-CREATE TABLE Character
+CREATE TABLE Characters
 (
   ID SERIAL,
   Name VARCHAR(50) NOT NULL,
@@ -53,32 +48,30 @@ CREATE TABLE Character
   Charisma_Ability_Score INT NOT NULL,
   Proficiency_bonus INT NOT NULL,
   username VARCHAR(25) NOT NULL,
-  BackgroundID BIGINT NOT NULL,
-  RaceID BIGINT NOT NULL,
-  ClassID BIGINT NOT NULL,
+  BackgroundID BIGINT UNSIGNED NULL,
+  RaceID BIGINT UNSIGNED NOT NULL,
+  ClassID BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (ID),
-  FOREIGN KEY (username) REFERENCES User(username),
+  FOREIGN KEY (username) REFERENCES Users(username),
   FOREIGN KEY (BackgroundID) REFERENCES Background(BackgroundID),
   FOREIGN KEY (RaceID) REFERENCES Race(RaceID),
   FOREIGN KEY (ClassID) REFERENCES Class(ClassID)
 );
-
 CREATE TABLE Skills
 (
   Name VARCHAR(50) NOT NULL,
   Modifier INT NOT NULL,
   Proficiency BOOL NOT NULL,
-  ID BIGINT NOT NULL,
+  ID BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (Name, ID),
-  FOREIGN KEY (ID) REFERENCES Character(ID)
+  FOREIGN KEY (ID) REFERENCES Characters(ID)
 );
-
 CREATE TABLE Saving_Throws
 (
   Name VARCHAR(50) NOT NULL,
   Modifier INT NOT NULL,
   Proficiency BOOL NOT NULL,
-  ID BIGINT NOT NULL,
+  ID BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (Name, ID),
-  FOREIGN KEY (ID) REFERENCES Character(ID)
+  FOREIGN KEY (ID) REFERENCES Characters(ID)
 );
