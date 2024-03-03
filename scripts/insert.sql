@@ -20,7 +20,7 @@ SET @ClassID = (SELECT ClassID FROM Class WHERE Name = 'Paladin');
 INSERT INTO Characters (Name, Strength_Ability_Score, Dexterity_Ability_Score, Constitution_Ability_Score, Intelligence_Ability_Score, Wisdom_Ability_Score, Charisma_Ability_Score, Proficiency_bonus, username, BackgroundID, RaceID, ClassID)
 VALUES ('Larry', 14, 15, 17, 55, 67, 1, 5, 'larry_bird', @BackgroundID, @RaceID, @ClassID);
 
-SET @CharacterID = (SELECT ID FROM Characters WHERE Name = 'Larry');
+SET @CharacterID = (SELECT ID FROM Characters WHERE Name = 'Larry' and username = 'larry_bird');
 INSERT INTO Skills (Name, Modifier, Proficiency, ID)
 VALUES ('Acrobatics', 8, True, @CharacterID);
 
