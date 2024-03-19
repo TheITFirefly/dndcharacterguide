@@ -1,5 +1,5 @@
 {
-  "Races": {
+  "Race": {
     "Dwarf": 18,
     "Elf": 21,
     "Halfling": 26,
@@ -10,7 +10,7 @@
     "Half-Orc": 40,
     "Tiefling": 42
   },
-  "Classes": {
+  "Class": {
     "Barbarian": 46,
     "Bard": 51,
     "Cleric": 56,
@@ -24,7 +24,7 @@
     "Warlock": 105,
     "Wizard": 112
   },
-  "Backgrounds": {
+  "Background": {
     "Acolyte": 127,
     "Charlatan": 128,
     "Criminal": 129,
