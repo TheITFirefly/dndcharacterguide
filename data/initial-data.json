@@ -1,0 +1,42 @@
+{
+  "Races": {
+    "Dwarf": 18,
+    "Elf": 21,
+    "Halfling": 26,
+    "Human": 29,
+    "Dragonborn": 32,
+    "Gnome": 35,
+    "Half-elf": 38,
+    "Half-Orc": 40,
+    "Tiefling": 42
+  },
+  "Classes": {
+    "Barbarian": 46,
+    "Bard": 51,
+    "Cleric": 56,
+    "Druid": 64,
+    "Fighter": 70,
+    "Monk": 76,
+    "Paladin": 82,
+    "Ranger": 89,
+    "Rogue": 94,
+    "Sorcerer": 99,
+    "Warlock": 105,
+    "Wizard": 112
+  },
+  "Backgrounds": {
+    "Acolyte": 127,
+    "Charlatan": 128,
+    "Criminal": 129,
+    "Entertainer": 130,
+    "Folk Hero": 131,
+    "Guild Artisan": 132,
+    "Hermit": 134,
+    "Noble": 135,
+    "Outlander": 136,
+    "Sage": 137,
+    "Sailor": 139,
+    "Soldier": 140,
+    "Urchin": 141
+  }
+}
