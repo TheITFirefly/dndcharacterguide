@@ -75,3 +75,11 @@ CREATE TABLE Saving_Throws
   PRIMARY KEY (Name, ID),
   FOREIGN KEY (ID) REFERENCES Characters(ID)
 );
+CREATE VIEW CharacterDetails AS
+SELECT * FROM Characters c
+JOIN Race r ON c.RaceID = r.RaceID
+JOIN Background b ON c.BackgroundID = b.BackgroundID
+JOIN Class cl ON c.ClassID = cl.ClassID
+JOIN Skills s ON c.ID = s.ID
+JOIN Saving_Throws st ON c.ID = st.ID
+GROUP BY c.username;
