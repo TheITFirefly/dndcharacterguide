@@ -6,27 +6,27 @@ CREATE TABLE Party
 );
 CREATE TABLE Race
 (
-  Name VARCHAR(50) NOT NULL,
+  RaceName VARCHAR(50) NOT NULL,
   Page_Number INT NOT NULL,
   RaceID SERIAL,
   PRIMARY KEY (RaceID),
-  UNIQUE (Name)
+  UNIQUE (RaceName)
 );
 CREATE TABLE Class
 (
-  Name VARCHAR(50) NOT NULL,
+  ClassName VARCHAR(50) NOT NULL,
   Page_Number INT NOT NULL,
   ClassID SERIAL,
   PRIMARY KEY (ClassID),
-  UNIQUE (Name)
+  UNIQUE (ClassName)
 );
 CREATE TABLE Background
 (
-  Name VARCHAR(50) NOT NULL,
+  BackgroundName VARCHAR(50) NOT NULL,
   Page_Number INT NOT NULL,
   BackgroundID SERIAL,
   PRIMARY KEY (BackgroundID),
-  UNIQUE (Name)
+  UNIQUE (BackgroundName)
 );
 CREATE TABLE Users
 (
@@ -39,7 +39,7 @@ CREATE TABLE Users
 CREATE TABLE Characters
 (
   ID SERIAL,
-  Name VARCHAR(50) NOT NULL,
+  CharacterName VARCHAR(50) NOT NULL,
   Strength_Ability_Score INT NOT NULL,
   Dexterity_Ability_Score INT NOT NULL,
   Constitution_Ability_Score INT NOT NULL,
@@ -59,20 +59,20 @@ CREATE TABLE Characters
 );
 CREATE TABLE Skills
 (
-  Name VARCHAR(50) NOT NULL,
+  SkillName VARCHAR(50) NOT NULL,
   Modifier INT NOT NULL,
   Proficiency BOOL NOT NULL,
   ID BIGINT UNSIGNED NOT NULL,
-  PRIMARY KEY (Name, ID),
+  PRIMARY KEY (SkillName, ID),
   FOREIGN KEY (ID) REFERENCES Characters(ID)
 );
 CREATE TABLE Saving_Throws
 (
-  Name VARCHAR(50) NOT NULL,
+  Saving_ThrowName VARCHAR(50) NOT NULL,
   Modifier INT NOT NULL,
   Proficiency BOOL NOT NULL,
   ID BIGINT UNSIGNED NOT NULL,
-  PRIMARY KEY (Name, ID),
+  PRIMARY KEY (Saving_ThrowName, ID),
   FOREIGN KEY (ID) REFERENCES Characters(ID)
 );
 CREATE VIEW CharacterDetails AS
