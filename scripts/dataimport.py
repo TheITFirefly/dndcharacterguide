@@ -3,12 +3,12 @@ This module takes in json objects and uses them to populate the setup database w
 """
 import sys
 import os
-import dotenv
-import mariadb
 import json
+from dotenv import load_dotenv
+import mariadb
 
 # Database connection variables
-dotenv.load_dotenv()
+load_dotenv()
 dbuser = os.getenv('dbuser')
 dbpassword = os.getenv('dbpassword')
 dbhost = os.getenv('dbhost')
