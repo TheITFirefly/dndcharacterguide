@@ -1,3 +1,4 @@
 mariadb
 python-dotenv
 flask
+bcrypt
