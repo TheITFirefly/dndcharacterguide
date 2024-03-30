@@ -1,8 +1,6 @@
-DELETE FROM Skills WHERE Name='Acrobatics';
-DELETE FROM Saving_Throws WHERE Name='My Saving Throw';
-DELETE FROM Characters WHERE Name='Larry';
+DELETE FROM Characters WHERE CharacterName='Larry';
 DELETE FROM Users WHERE username='larry_bird';
-DELETE FROM Party WHERE Name='thisismyparty';
-DELETE FROM Race WHERE Name='Elf';
-DELETE FROM Class WHERE Name='Paladin';
-DELETE FROM Background WHERE Name='Gambler';
+DELETE FROM Party WHERE PartyName='thisismyparty';
+DELETE FROM Race WHERE RaceName='Elf';
+DELETE FROM Class WHERE ClassName='Paladin';
+DELETE FROM Background WHERE BackgroundName='Gambler';
