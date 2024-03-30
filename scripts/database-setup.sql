@@ -31,7 +31,7 @@ CREATE TABLE Background
 CREATE TABLE Users
 (
   username VARCHAR(25) NOT NULL,
-  password VARCHAR(32) NOT NULL,
+  password VARCHAR(75) NOT NULL,
   ID BIGINT UNSIGNED,
   PRIMARY KEY (username),
   FOREIGN KEY (ID) REFERENCES Party(ID)
@@ -64,7 +64,7 @@ CREATE TABLE Skills
   Proficiency BOOL NOT NULL,
   ID BIGINT UNSIGNED NOT NULL,
   PRIMARY KEY (SkillName, ID),
-  FOREIGN KEY (ID) REFERENCES Characters(ID) ON DELETE CASCADE;
+  FOREIGN KEY (ID) REFERENCES Characters(ID) ON DELETE CASCADE
 );
 CREATE TABLE Saving_Throws
 (
@@ -76,10 +76,16 @@ CREATE TABLE Saving_Throws
   FOREIGN KEY (ID) REFERENCES Characters(ID) ON DELETE CASCADE
 );
 CREATE VIEW CharacterDetails AS
-SELECT * FROM Characters c
+SELECT 
+    c.*,
+    r.RaceName, r.Page_Number AS Race_Page_Number,
+    b.BackgroundName, b.Page_Number AS Background_Page_Number,
+    cl.ClassName, cl.Page_Number AS Class_Page_Number,
+    s.SkillName, s.Modifier AS Skill_Modifier, s.Proficiency AS Skill_Proficiency,
+    st.Saving_ThrowName, st.Modifier AS Saving_Throw_Modifier, st.Proficiency AS Saving_Throw_Proficiency
+FROM Characters c
 JOIN Race r ON c.RaceID = r.RaceID
 JOIN Background b ON c.BackgroundID = b.BackgroundID
 JOIN Class cl ON c.ClassID = cl.ClassID
 JOIN Skills s ON c.ID = s.ID
-JOIN Saving_Throws st ON c.ID = st.ID
-GROUP BY c.username;
+JOIN Saving_Throws st ON c.ID = st.ID;
