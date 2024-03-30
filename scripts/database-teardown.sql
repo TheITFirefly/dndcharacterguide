@@ -6,4 +6,4 @@ DROP table Party;
 DROP table Race;
 DROP table Class;
 DROP table Background;
-
+DROP view CharacterDetails;
