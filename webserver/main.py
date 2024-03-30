@@ -5,8 +5,9 @@ Returns:
     None?
 """
 import os
-from flask import Flask, session, render_template, request, redirect, url_for, flash
-from dbutilities import initialize_connection, get_table_contents
+from flask import Flask, session, render_template, request, redirect, url_for
+from dbutilities import is_user, get_password_hash, create_user
+from serverutilities import hash_password, correct_password, user_authenticated
 from dotenv import load_dotenv
 
 # Load environment variables from .env file to get secret
@@ -17,85 +18,107 @@ app = Flask(__name__)
 app.secret_key = os.getenv("secret")
 
 @app.route("/")
-def home_page():
+def index():
     """
-    Contains buttons to sign up and login if unauthenticated
-    Redirects to /characters if authenticated already
+    Page containing buttons to sign up or log in
     """
-    return
+    authenticated = user_authenticated()
+    if authenticated:
+        return redirect(url_for('characters'))
+    return render_template('index.html')
 
-@app.route("/login")
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     """
-    Contains form to log in. Flask documentation has good example with session
+    Contains form to log in if unauthenticated.
+    Redirects to viewing characters if authenticated
     """
-    return
+    authenticated = user_authenticated()
+    if authenticated:
+        return redirect(url_for('characters'))
+    if request.method == 'POST':
+        username = request.form['username']
+        entered_password = request.form['password']
+        if is_user(username):
+            if correct_password(get_password_hash(username), entered_password):
+                session['authenticated'] = True
+                return redirect(url_for('characters'))
+            error = "Entered password was wrong"
+            return render_template('login.html', error=error)
+        error = "Username not found"
+        return render_template('login.html', error=error)
+    return render_template('login.html')
 
-@app.route("/logout")
+@app.route('/logout')
 def logout():
     """
-    Hit with a POST request to logout
+    Logs the user out if they are logged in
     """
-    return
+    session['authenticated'] = False
+    return redirect(url_for('index'))
 
-@app.route("/signup")
-def signup_page():
-    """
-    Contains form to create an account
-    """
-    return
 
-@app.route("/create-account")
+@app.route("/create-account", methods=['GET', 'POST'])
 def create_account():
     """
-    Hit with PUT? request to create account if it doesn't exist already
+    Adds an entry to the user table 
     """
-    return
+    if request.method == 'POST':
+        submitted_password = hash_password(request.form['password'])
+        user_created = create_user(request.form['username'], submitted_password)
+        if user_created:
+            return redirect(url_for('login'))
+        error = "Username unavailable or some other error occured"
+        return render_template('create-account.html', error=error)
+    authenticated = user_authenticated()
+    if authenticated:
+        return redirect(url_for('characters'))
+    return render_template('create-account.html')
 
-@app.route("/account")
-def account_page():
-    """
-    Page containing buttons to either delete account or change password
-    """
-    return
+# @app.route("/account")
+# def account_page():
+#     """
+#     Page containing buttons to either delete account or change password
+#     """
+#     return
+# @app.route("/account/delete-account/<str:username>")
+# def delete_account():
+#     """
+#     Hit with DELETE request to delete account.
+#     Require user to be authenticated for account to be deleted
+#     """
+#     return
 
-@app.route("/account/delete-account/<str:username>")
-def delete_account():
-    """
-    Hit with DELETE request to delete account
-    """
-    return
+# @app.route("/account/change-password")
+# def change_password():
+#     """
+#     Hit with PUT? request to change password
+#     """
+#     return
 
-@app.route("/account/change-password")
-def change_password():
-    """
-    Hit with PUT? request to change password
-    """
-    return
+# @app.route("/party")
+# def party_page():
+#     """
+#     Page containing buttons to join a party or create a party
+#     """
+#     return
 
-@app.route("/party")
-def party_page():
-    """
-    Page containing buttons to join a party or create a party
-    """
-    return
+# @app.route("/party/create")
+# def create_party():
+#     """
+#     Page containing form to create party
+#     """
+#     return
 
-@app.route("/party/create")
-def create_party():
-    """
-    Page containing form to create party
-    """
-    return
-
-@app.route("/party/join")
-def join_party():
-    """
-    Page containing available parties to join
-    """
-    return
+# @app.route("/party/join")
+# def join_party():
+#     """
+#     Page containing available parties to join
+#     """
+#     return
 
 @app.route("/characters")
-def character_page():
+def characters():
     """
     Page containing characters in a grid
     Shows the following for each character
@@ -105,35 +128,36 @@ def character_page():
         - background
     Also contains buttons to view/edit/delete each character
     """
-    return
+    return "You are currently authenticated"
 
-@app.route("/characters/show/<int:character_id>")
-def get_character_details():
-    """
-    Page to show details for a particular character
-    """
-    return
+# @app.route("/characters/show/<int:character_id>")
+# def get_character_details():
+#     """
+#     Page to show details for a particular character
+#     """
+#     return
 
-@app.route("/characters/create")
-def create_character():
-    """
-    Page to create a new character
-    """
-    return
+# @app.route("/characters/create")
+# def create_character():
+#     """
+#     Page to create a new character
+#     """
+#     return
 
-@app.route("/characters/edit/<int:character_id>")
-def edit_character_details():
-    """
-    Page to edit details for a particular character
-    """
-    return
+# @app.route("/characters/edit/<int:character_id>")
+# def edit_character_details():
+#     """
+#     Page to edit details for a particular character
+#     """
+#     return
 
-@app.route("/characters/delete/<int:character_id>")
-def delete_character():
-    """
-    Hit with a DELETE request to delete a character
-    """
-    return
+# @app.route("/characters/delete/<int:character_id>")
+# def delete_character():
+#     """
+#     Hit with a DELETE request to delete a character
+#     """
+#     return
+
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True) # TODO: Students PLEASE remove debug=True when put in production
