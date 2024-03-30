@@ -1,2 +1,3 @@
 dbclassvenv/*
+__pycache__
 .env
