@@ -6,7 +6,7 @@ Returns:
 """
 import os
 from flask import Flask, session, render_template, request, redirect, url_for
-from dbutilities import is_user, get_password_hash, create_user
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user
 from serverutilities import hash_password, correct_password, user_authenticated
 from dotenv import load_dotenv
 
@@ -42,6 +42,7 @@ def login():
         if is_user(username):
             if correct_password(get_password_hash(username), entered_password):
                 session['authenticated'] = True
+                session['username'] = username
                 return redirect(url_for('characters'))
             error = "Entered password was wrong"
             return render_template('login.html', error=error)
@@ -75,12 +76,16 @@ def create_account():
         return redirect(url_for('characters'))
     return render_template('create-account.html')
 
-# @app.route("/account")
-# def account_page():
-#     """
-#     Page containing buttons to either delete account or change password
-#     """
-#     return
+@app.route("/account")
+def account_page():
+    """
+    Page containing buttons to either delete account or change password
+    """
+    authenticated = user_authenticated()
+    if not authenticated:
+        return redirect(url_for('login'))
+    return render_template('account.html')
+
 # @app.route("/account/delete-account/<str:username>")
 # def delete_account():
 #     """
@@ -89,12 +94,39 @@ def create_account():
 #     """
 #     return
 
-# @app.route("/account/change-password")
-# def change_password():
-#     """
-#     Hit with PUT? request to change password
-#     """
-#     return
+@app.route("/account/change-password", methods=['GET', 'POST'])
+def change_password():
+    """
+    Contains form to change password
+    """
+    authenticated = user_authenticated()
+    if not authenticated:
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+
+        username = session['username']
+        old_password = request.form['old-password']
+        new_password = request.form['new-password']
+        confirm_new_password = request.form['confirm-new-password']
+
+        hashed_password = get_password_hash(username)
+        if not correct_password(hashed_password, old_password):
+            error = "Old password wrong"
+            return render_template('change-password.html', error=error)
+        elif old_password == new_password:
+            error = "New password cannot be old password"
+            return render_template('change-password.html', error=error)
+        elif new_password != confirm_new_password:
+            error = "New passwords don't match"
+            return render_template('change-password.html', error=error)
+        else:
+            new_password_hash = hash_password(new_password)
+            password_changed = change_password_hash(username, new_password_hash)
+            if password_changed:
+                return redirect(url_for('account_page'))
+            error = "Something went wrong changing your password"
+            return render_template('change-password.html', error=error)
+    return render_template('change-password.html')
 
 # @app.route("/party")
 # def party_page():

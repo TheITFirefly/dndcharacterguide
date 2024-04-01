@@ -50,11 +50,13 @@ def is_user(username) -> bool:
     """
     Gets all usernames
     """
+    print("Fetching username")
     conn = initialize_connection()
     cursor = conn.cursor()
 
     query = "SELECT username from Users WHERE username = %s;"
-    cursor.execute(query, (username))
+    cursor.execute(query, (username,))
+    print(cursor.rowcount > 0)
     if cursor.rowcount > 0:
         conn.close()
         return True
@@ -81,6 +83,7 @@ def get_password_hash(username) -> str:
     """
     Gets the stored password hash for a user.
     """
+    print("Getting password")
     conn = initialize_connection()
     cursor = conn.cursor()
 
@@ -94,3 +97,20 @@ def get_password_hash(username) -> str:
         return result[0][0]
     else:
         return None
+
+def change_password_hash(username, new_hash):
+    """
+    Alter the user table with new password hash
+    Returns whether password was successfully changed or not
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "UPDATE Users SET password = %s WHERE username = %s;"
+    cursor.execute(query, (new_hash, username,))
+    if cursor.rowcount > 0:
+        conn.commit()
+        conn.close()
+        return True
+    conn.close()
+    return False
