@@ -8,4 +8,14 @@
 <body>
     <a href="/account/change-password"><button>Change Password</button></a>
     <a href="/account/delete-account"><button>Delete Account</button></a>
+    <a href="/account/totp"><button>Set up TOTP</button></a>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul class="flashes">
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
 </body>
