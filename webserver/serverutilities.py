@@ -5,10 +5,12 @@ from bcrypt import hashpw, gensalt, checkpw
 from flask import session
 def hash_password(password) -> str:
     """
-    Hashes a password given
+    Hashes a given password
+
+    Returns:
+        str: hashed password
     """
-    hashed_password = hashpw(password.encode('utf-8'), gensalt())
-    return hashed_password
+    return hashpw(password.encode('utf-8'), gensalt())
 
 def correct_password(hashed_password, entered_password) -> bool:
     """
