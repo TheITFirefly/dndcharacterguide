@@ -74,10 +74,61 @@ def create_user(username, hashed_password):
     cursor.execute(query, (username, hashed_password))
 
     conn.commit()
-    rows_affected = cursor.rowcount
+    rowcount = cursor.rowcount
     conn.close()
 
-    return rows_affected > 0
+    return rowcount > 0
+
+def add_totp(username, seed):
+    """
+    Adds TOTP to a user's account
+    Adds ability to reset password
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "UPDATE Users SET totpseed = %s WHERE username = %s;"
+    cursor.execute(query, (seed,username,))
+    conn.commit()
+    conn.close()
+    return
+
+def get_totp_seed(username) -> str:
+    """
+    Gets the stored TOTP seed for a user.
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT totpseed FROM Users WHERE username = %s;"
+    cursor.execute(query, (username,))
+    result = cursor.fetchall()
+
+    conn.close()
+
+    if result:
+        return result[0][0]
+    else:
+        return None
+
+def totp_enabled(username):
+    """
+    Determine if a user has TOTP enabled
+
+    Returns:
+        Bool: whether or not user has TOTP enabled
+    """
+    # Initialize connection to database
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT * from Users WHERE username = %s AND totpseed IS NOT NULL"
+    cursor.execute(query, (username,))
+    rowcount = cursor.rowcount
+    # Close connection to database when done to prevent hanging
+    conn.close()
+    #
+    return rowcount == 1
 
 def get_password_hash(username) -> str:
     """
