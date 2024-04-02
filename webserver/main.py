@@ -71,7 +71,7 @@ def verify_totp():
         session['authenticated'] = False
         render_template('verify-totp.html')
     else:
-        redirect(url_for('characters'))
+        return redirect(url_for('characters'))
     if request.method == 'POST':
         totp_code = request.form['totp-code']
         totp_seed = get_totp_seed(session['username'])
