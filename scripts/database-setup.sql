@@ -32,6 +32,7 @@ CREATE TABLE Users
 (
   username VARCHAR(25) NOT NULL,
   password VARCHAR(75) NOT NULL,
+  totpseed VARCHAR(40),
   ID BIGINT UNSIGNED,
   PRIMARY KEY (username),
   FOREIGN KEY (ID) REFERENCES Party(ID)
@@ -76,7 +77,7 @@ CREATE TABLE Saving_Throws
   FOREIGN KEY (ID) REFERENCES Characters(ID) ON DELETE CASCADE
 );
 CREATE VIEW CharacterDetails AS
-SELECT 
+SELECT
     c.*,
     r.RaceName, r.Page_Number AS Race_Page_Number,
     b.BackgroundName, b.Page_Number AS Background_Page_Number,
