@@ -78,7 +78,7 @@ def verify_totp():
         totp_validate = pyotp.totp.TOTP(totp_seed)
         if totp_code != totp_validate.now():
             flash("TOTP code was invalid")
-            return redirect(url_for('login_page'))
+            return redirect(url_for('login'))
         session['authenticated'] = True
         return redirect(url_for('characters'))
     return render_template("verify-totp.html")
