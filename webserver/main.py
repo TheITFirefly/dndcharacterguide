@@ -9,7 +9,7 @@ import pyotp
 import time
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, totp_enabled, add_totp, get_totp_seed
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed
 from serverutilities import hash_password, correct_password, user_authenticated
 from dotenv import load_dotenv
 
@@ -109,13 +109,24 @@ def account_page():
         return redirect(url_for('login'))
     return render_template('account.html')
 
-# @app.route("/account/delete-account")
-# def delete_account():
-#     """
-#     Hit with DELETE request to delete account.
-#     Require user to be authenticated for account to be deleted
-#     """
-#     return
+@app.route("/account/delete-account", methods=['GET','POST'])
+def delete_account():
+    """
+    Hit with DELETE request to delete account.
+    Require user to be authenticated for account to be deleted
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        if confirmation == 'yes':
+            delete_user(session['username'])
+            session.pop('username', None)
+            session['authenticated'] = False
+            flash('Account deleted')
+            return redirect(url_for('index'))
+        return redirect(url_for('account_page'))
+    return render_template('delete-account.html')
 
 @app.route("/account/change-password", methods=['GET', 'POST'])
 def change_password():

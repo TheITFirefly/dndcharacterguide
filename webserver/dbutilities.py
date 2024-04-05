@@ -79,6 +79,19 @@ def create_user(username, hashed_password):
 
     return rowcount > 0
 
+def delete_user(username):
+    """
+    Deletes a user from the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "DELETE FROM Users WHERE username=%s"
+    cursor.execute(query, (username,))
+
+    conn.commit()
+    conn.close()
+
 def add_totp(username, seed):
     """
     Adds TOTP to a user's account
