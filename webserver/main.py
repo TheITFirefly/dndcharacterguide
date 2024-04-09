@@ -9,6 +9,7 @@ import pyotp
 import time
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
+from flask_bootstrap import Bootstrap
 from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed
 from serverutilities import hash_password, correct_password, user_authenticated
 from dotenv import load_dotenv
@@ -20,6 +21,7 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("secret")
 QRcode(app)
+Bootstrap(app)
 
 @app.route("/")
 def index():
@@ -99,6 +101,15 @@ def create_account():
     if authenticated:
         return redirect(url_for('characters'))
     return render_template('create-account.html')
+
+@app.route("/reset-password", methods=['GET', 'POST'])
+def reset_password():
+    """
+    Reset user password with TOTP code
+    """
+    if request.method == 'POST':
+        return render_template('reset-password.html', correct_totp=True)
+    return render_template('reset-password.html')
 
 @app.route("/account")
 def account_page():

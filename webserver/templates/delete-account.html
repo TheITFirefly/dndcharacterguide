@@ -1,17 +1,32 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Account</title>
-</head>
-<body>
-    <h1>Are you sure you want to delete your account</h1>
-    <form id="deleteForm" method="POST">
-        <input type="radio" id="yes" name="confirmation" value="yes">
-        <label for="yes">Yes</label><br>
-        <input type="radio" id="no" name="confirmation" value="no" checked>
-        <label for="no">No</label><br>
-        <button type="submit">Submit</button>
-    </form>
-</body>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Delete Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<p>Are you sure you want to delete your account</p>
+<form id="deleteForm" method="POST">
+    <div class="radio">
+        <label><input type="radio" name="confirmation" value="yes">Yes</label>
+    </div>
+    <div class="radio">
+        <label><input type="radio" name="confirmation" value="no" checked>No</label>
+    </div>
+    <button class="btn btn-danger" type="submit">Delete Account</button>
+</form>
+{% endblock %}
