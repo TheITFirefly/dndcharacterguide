@@ -1,14 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Verify TOTP</title>
-</head>
-<body>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Delete Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide - Verify TOTP</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
     <form method="post">
-        <label for="totp-code">Enter TOTP Code:</label>
-        <input type="text" id="totp-code" name="totp-code" required>
-        <input type="submit" value="Verify TOTP">
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+            <input id="totp-code" type="password" class="form-control" name="totp-code" placeholder="TOTP Code" required>
+        </div>
+        <input class="btn btn-default" type="submit" value="Verify TOTP">
     </form>
-</body>
+{% endblock %}

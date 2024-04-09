@@ -1,13 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>D&D Character Guide</title>
-</head>
-<body>
-    <h1>Welcome to the D&D Character Guide</h1>
-    <p>Please log in or create an account to continue:</p>
-    <a href="/login"><button>Login</button></a>
-    <a href="/create-account"><button>Create Account</button></a>
-</body>
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h3>Please log in or create an account to continue:</h3>
+<a href="/login"><button class="btn">Login</button></a>
+<a href="/create-account"><button class="btn">Create Account</button></a>
+{% endblock %}
