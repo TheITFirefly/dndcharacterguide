@@ -2,5 +2,6 @@ mariadb
 python-dotenv
 flask
 flask-qrcode
+flask-bootstrap
 bcrypt
 pyotp
