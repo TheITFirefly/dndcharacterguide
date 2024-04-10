@@ -5,9 +5,9 @@ Returns:
     None?
 """
 import os
+import time
 import json
 import pyotp
-import time
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
@@ -112,7 +112,12 @@ def reset_password():
     Reset user password with TOTP code
     """
     if request.method == 'POST':
-        return render_template('reset-password.html', correct_totp=True)
+        return render_template('reset-password.html')
+        username = request.form['username']
+        totp_code = request.form['totp-code']
+        # TODO: verify the totp code
+        # TODO: encrypt the new password
+        # TODO: update the password for the user
     return render_template('reset-password.html')
 
 @app.route("/account")
@@ -240,7 +245,9 @@ def characters():
         - race
         - class
         - background
-    Also contains buttons to view/edit/delete each character
+        - view button (approx. href /characters/show/{{ character_id }})
+        - edit button (approx. href /characters/edit/{{ character_id }})
+        - delete button (approx. href /characters/delete/{{ character_id }})
     """
     return "You are currently authenticated"
 
@@ -308,16 +315,16 @@ def create_character():
     return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, saving_throws=saving_throws, skills=skills)
 
 # @app.route("/characters/edit/<int:character_id>")
-# def edit_character_details():
+# def edit_character_details(character_id):
 #     """
 #     Page to edit details for a particular character
 #     """
 #     return
 
 # @app.route("/characters/delete/<int:character_id>")
-# def delete_character():
+# def delete_character(character_id):
 #     """
-#     Hit with a DELETE request to delete a character
+#     Make sure to confirm deletion, like account deletion page
 #     """
 #     return
 
