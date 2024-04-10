@@ -29,3 +29,10 @@ def user_authenticated():
             return True
     session['authenticated'] = False
     return False
+
+def calculate_modifier(score):
+    """
+    Calculates modifier to be put into database from user score input during character creation
+    Does not take into account proficiency
+    """
+    return (score - 10) // 2

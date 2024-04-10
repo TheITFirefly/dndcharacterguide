@@ -1,0 +1,73 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li class="active"><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="name">Character Name:</label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input id="name" type="username" class="form-control" name="name" placeholder="Character Name" required>
+        </div>
+        <label for="race">Select Race:</label>
+        <select class="form-control" id="race" name="race">
+        {% for race in races %}
+            <option value="{{ race[2] }}">{{ race[0] }}</option>
+        {% endfor %}
+        </select>
+        <label for="class">Select Class:</label>
+        <select class="form-control" id="class" name="class">
+        {% for class in classes %}
+            <option value="{{ class[2] }}">{{ class[0] }}</option>
+        {% endfor %}
+        </select>
+        <label for="background">Select Background:</label>
+        <select class="form-control" id="background" name="background">
+        {% for background in backgrounds %}
+            <option value="{{ background[2] }}">{{ background[0] }}</option>
+        {% endfor %}
+        </select>
+    </div>
+
+    {% for saving_throw in saving_throws %}
+    <label for="{{saving_throw}}">{{ saving_throw }}:</label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="{{ saving_throw }}" type="number" min="1" max="30" class="form-control" name="{{ saving_throw }}" required>
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox" class="checkbox" value="true" name="{{ saving_throw }}-proficiency">{{ saving_throw }} Proficiency</label>
+    </div>
+    {% endfor %}
+    <label>Skill Proficiency:</label>
+    {% for skill in skills %}
+    <div class="checkbox">
+        <label><input type="checkbox" class="checkbox" value="true" name="{{ skill }}-proficiency">{{ skill }} Proficiency</label>
+    </div>
+    {% endfor %}
+    
+    <label for="proficiency-bonus">Proficiency Bonus:</label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="proficiency-bonus" type="number" min="-5" max="10" class="form-control" name="proficiency-bonus" required>
+    </div>
+    <input class="btn btn-default" type="submit" value="Create Character">
+</form>
+{% endblock %}
