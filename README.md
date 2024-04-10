@@ -9,3 +9,18 @@ This readme is meant to show that all of us have proper access to the git repo f
 
 # Developing
 Jordan's template for is available at [this github repo](https://github.com/jordanbw1/itc350-template/blob/main/main.py) and may be helpful as a reference as we figure out the templating and stuff for ourselves. You may also want to look at the [flask quick start](https://flask.palletsprojects.com/en/2.3.x/quickstart). Finally it is recommended that you run `python -c 'import secrets; print(secrets.token_hex())'` for generating the secret in the .env file
+
+# TODO
+
+- [ ] Characters overview
+- [ ] Editing individual characters
+- [ ] Deleting characters
+- [ ] Password resets
+- [ ] Party creation
+- [ ] Party joining
+- [ ] Party deletion?
+- [ ] Party member management? (May require database schema change to add party admin status)
+- [ ] Improved setup instructions in readme (see signal list sent to Alex for a rough idea)
+
+## Helpful resources
+- [Editing/deleting characters](https://flask.palletsprojects.com/en/2.3.x/quickstart/#variable-rules)
