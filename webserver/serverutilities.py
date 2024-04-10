@@ -35,5 +35,4 @@ def calculate_modifier(score):
     Calculates modifier to be put into database from user score input during character creation
     Does not take into account proficiency
     """
-    modifier = (score - 10) // 2
-    return modifier
+    return (score - 10) // 2
