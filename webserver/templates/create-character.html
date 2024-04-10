@@ -45,6 +45,7 @@
         {% endfor %}
         </select>
     </div>
+
     {% for saving_throw in saving_throws %}
     <label for="{{saving_throw}}">{{ saving_throw }}:</label>
     <div class="input-group">
@@ -55,6 +56,13 @@
         <label><input type="checkbox" class="checkbox" value="true" name="{{ saving_throw }}-proficiency">{{ saving_throw }} Proficiency</label>
     </div>
     {% endfor %}
+    <label>Skill Proficiency:</label>
+    {% for skill in skills %}
+    <div class="checkbox">
+        <label><input type="checkbox" class="checkbox" value="true" name="{{ skill }}-proficiency">{{ skill }} Proficiency</label>
+    </div>
+    {% endfor %}
+    
     <label for="proficiency-bonus">Proficiency Bonus:</label>
     <div class="input-group">
         <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
