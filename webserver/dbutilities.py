@@ -40,8 +40,8 @@ def get_table_contents(table_name):
     conn = initialize_connection()
     cursor = conn.cursor()
 
-    query = "SELECT * FROM %s"
-    cursor.execute(query, (table_name,))
+    query = f"SELECT * FROM {table_name}" # Bad formatting is fine since this isn't user-submitted
+    cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
     return result
@@ -50,7 +50,6 @@ def is_user(username) -> bool:
     """
     Gets all usernames
     """
-    print("Fetching username")
     conn = initialize_connection()
     cursor = conn.cursor()
 
@@ -178,3 +177,33 @@ def change_password_hash(username, new_hash):
         return True
     conn.close()
     return False
+
+def add_character(name, race_id, class_id, background_id, ability_scores, proficiency_bonus, username):
+    """
+    Adds a character to the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "INSERT INTO Characters (CharacterName, RaceID, ClassID, BackgroundID, Strength_Ability_Score, Dexterity_Ability_Score, Constitution_Ability_Score, Intelligence_Ability_Score, Wisdom_Ability_Score, Charisma_Ability_Score, Proficiency_bonus, username) VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);"
+    cursor.execute(query, (name, race_id, class_id, background_id, ability_scores[0], ability_scores[1], ability_scores[2], ability_scores[3], ability_scores[4], ability_scores[5], proficiency_bonus, username))
+
+    character_id = cursor.lastrowid
+    print(character_id)
+    conn.commit()
+    conn.close()
+    return character_id
+
+def add_saving_throw(character_id, name, modifier, proficiency):
+    """
+    Add a saving throw to a character
+    """
+    # TODO: Finish this insert statement. No need to return anything
+    return
+
+def add_skill(character_id, name, modifier, proficiency):
+    """
+    Add a skill to a character
+    """
+    # TODO: Finish this insert statement. No need to return anything
+    return

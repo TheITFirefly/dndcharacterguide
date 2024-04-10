@@ -5,14 +5,18 @@ Returns:
     None?
 """
 import os
+import json
 import pyotp
 import time
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed
-from serverutilities import hash_password, correct_password, user_authenticated
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw
+from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
+
+#used for loading json
+SCRIPT_PATH = __file__
 
 # Load environment variables from .env file to get secret
 load_dotenv()
@@ -247,12 +251,50 @@ def characters():
 #     """
 #     return
 
-# @app.route("/characters/create")
-# def create_character():
-#     """
-#     Page to create a new character
-#     """
-#     return
+@app.route("/characters/create", methods=['GET', 'POST'])
+def create_character():
+    """
+    Page to create a new character
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    
+    # Get path to JSON
+    data_path = os.path.dirname(os.path.dirname(SCRIPT_PATH))
+    data_path = os.path.join(data_path, 'data', 'skills-and-saving-throws.json')
+
+    # Load Skills and saving throws from JSON
+    with open(data_path, encoding="utf-8") as file:
+        loaded_json = json.load(file)
+    abilities = loaded_json['Saving throws']
+    skills = loaded_json['Skills']
+    saving_throws = loaded_json['Saving throws']
+
+    if request.method == 'POST':
+        # Gather data needed to create character
+        character_name = request.form['name']
+        character_race = request.form['race']
+        character_class = request.form['class']
+        character_background = request.form['background']
+        character_proficiency_bonus = request.form['proficiency-bonus']
+        ability_scores = []
+        for ability in abilities:
+            ability_scores.append(request.form[ability])
+        character_id = add_character(character_name, character_race, character_class, character_background, ability_scores, character_proficiency_bonus, session['username'])
+
+        for throw in saving_throws:
+            # Determine if proficiency
+            proficiency_key = f"{throw}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            if proficiency:
+                modifier = calculate_modifier(request.form[throw]) + character_proficiency_bonus
+            modifier = calculate_modifier(request.form[throw])
+        add_saving_throw(character_id, throw, modifier, proficiency)
+        return redirect(url_for('characters'))
+    races = get_table_contents('Race')
+    classes = get_table_contents('Class')
+    backgrounds = get_table_contents('Background')
+    return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, skills=skills, saving_throws=saving_throws)
 
 # @app.route("/characters/edit/<int:character_id>")
 # def edit_character_details():
