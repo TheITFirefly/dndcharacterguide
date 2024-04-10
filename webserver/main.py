@@ -11,7 +11,7 @@ import time
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -258,7 +258,7 @@ def create_character():
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    
+
     # Get path to JSON
     data_path = os.path.dirname(os.path.dirname(SCRIPT_PATH))
     data_path = os.path.join(data_path, 'data', 'skills-and-saving-throws.json')
@@ -276,7 +276,7 @@ def create_character():
         character_race = request.form['race']
         character_class = request.form['class']
         character_background = request.form['background']
-        character_proficiency_bonus = request.form['proficiency-bonus']
+        character_proficiency_bonus = int(request.form['proficiency-bonus'])
         ability_scores = []
         for ability in abilities:
             ability_scores.append(request.form[ability])
@@ -286,15 +286,26 @@ def create_character():
             # Determine if proficiency
             proficiency_key = f"{throw}-proficiency"
             proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[throw])
             if proficiency:
-                modifier = calculate_modifier(request.form[throw]) + character_proficiency_bonus
-            modifier = calculate_modifier(request.form[throw])
-        add_saving_throw(character_id, throw, modifier, proficiency)
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_saving_throw(character_id, throw, modifier, proficiency)
+
+        for skill, ability_score in skills.items():
+            # Determine if proficiency
+            proficiency_key = f"{skill}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[ability_score])
+            if proficiency:
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_skill(character_id, skill, modifier, proficiency)
         return redirect(url_for('characters'))
     races = get_table_contents('Race')
     classes = get_table_contents('Class')
     backgrounds = get_table_contents('Background')
-    return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, skills=skills, saving_throws=saving_throws)
+    return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, saving_throws=saving_throws, skills=skills)
 
 # @app.route("/characters/edit/<int:character_id>")
 # def edit_character_details():
