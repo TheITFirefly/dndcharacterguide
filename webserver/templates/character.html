@@ -1,0 +1,43 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li class='active'><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Character Items</h1>
+    <div class="row">
+        {% for character in character_list %}
+            <div class="col-md-4">
+                <div class="card" style="margin-bottom: 20px;">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ character.name }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">Items:</h6>
+                        <ul>
+                            {% for item in character.items %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock%}
+

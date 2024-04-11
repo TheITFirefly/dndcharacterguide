@@ -221,3 +221,39 @@ def add_skill(character_id, name, modifier, proficiency):
     conn.commit()
     conn.close()
     return None
+
+
+def get_one_character(character_id):
+    """
+    Show character info for one single character.
+    
+    Args:
+        character_id (int): unique character ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT * FROM Characters WHERE ID = %s"
+    cursor.execute(query, (character_id,))
+    result = cursor.fetchall()
+    conn.close()
+    
+    return result
+
+
+def get_user_characters(username):
+    """
+    Show all characters linked to specific user ID
+
+    Args:
+        user_id (int): unique user ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT * FROM Characters WHERE username = %s"
+    cursor.execute(query, (username,))
+    result = cursor.fetchall()
+    conn.close()
+    
+    return result
