@@ -255,7 +255,7 @@ def characters():
     if request.method == 'GET':
         character_list = get_user_characters(session['username'])
     
-        return render_template('user_characters.html', character_list=character_list)
+        return render_template('character.html', character_list=character_list)
 
 
 @app.route("/characters/show/<int:character_id>", methods=['GET'])
