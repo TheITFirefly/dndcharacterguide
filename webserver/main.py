@@ -254,8 +254,11 @@ def characters():
     
     if request.method == 'GET':
         character_list = get_user_characters(session['username'])
+        races = get_table_contents('Race')
+        classes = get_table_contents('Class')
+        backgrounds = get_table_contents('Background')
     
-        return render_template('character.html', character_list=character_list)
+        return render_template('character.html', character_list=character_list, races=races, classes=classes, backgrounds=backgrounds)
 
 
 @app.route("/characters/show/<int:character_id>", methods=['GET'])
