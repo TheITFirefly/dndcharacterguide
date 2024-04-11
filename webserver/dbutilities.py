@@ -269,7 +269,7 @@ def get_race_name(race_id):
     conn = initialize_connection()
     cursor = conn.cursor()
     
-    query = "SELECT RaceName FROM Race WHERE ID = %s"
+    query = "SELECT RaceName FROM Race WHERE RaceID = %s"
     cursor.execute(query, (race_id,))
     result = cursor.fetchall()
     conn.close()
