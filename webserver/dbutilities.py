@@ -271,10 +271,10 @@ def get_race_name(race_id):
     
     query = "SELECT RaceName FROM Race WHERE RaceID = %s"
     cursor.execute(query, (race_id,))
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     conn.close()
     
-    return result
+    return result[0]
 
 def get_class_name(class_id):
     """
@@ -288,10 +288,10 @@ def get_class_name(class_id):
     
     query = "SELECT ClassName FROM Class WHERE ClassID = %s"
     cursor.execute(query, (class_id,))
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     conn.close()
     
-    return result
+    return result[0]
 
 def get_background_name(background_id):
     """
@@ -305,7 +305,7 @@ def get_background_name(background_id):
     
     query = "SELECT BackgroundName FROM Background WHERE BackgroundID = %s"
     cursor.execute(query, (background_id,))
-    result = cursor.fetchall()
+    result = cursor.fetchone()
     conn.close()
     
-    return result
+    return result[0]
