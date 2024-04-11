@@ -233,7 +233,7 @@ def get_one_character(character_id):
     conn = initialize_connection()
     cursor = conn.cursor()
     
-    query = "SELECT * FROM Characters WHERE ID = %s"
+    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE ID = %s"
     cursor.execute(query, (character_id,))
     result = cursor.fetchall()
     conn.close()
@@ -251,7 +251,7 @@ def get_user_characters(username):
     conn = initialize_connection()
     cursor = conn.cursor()
     
-    query = "SELECT * FROM Characters WHERE username = %s"
+    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE username = %s"
     cursor.execute(query, (username,))
     result = cursor.fetchall()
     conn.close()
