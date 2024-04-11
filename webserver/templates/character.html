@@ -26,10 +26,10 @@
             <div class="col-md-4">
                 <div class="card" style="margin-bottom: 20px;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ character.name }}</h5>
+                        <h5 class="card-title">{{ character[1] }}</h5>
                         <h6 class="card-subtitle mb-2 text-muted">Items:</h6>
                         <ul>
-                            {% for item in character.items %}
+                            {% for item in character %}
                                 <li>{{ item }}</li>
                             {% endfor %}
                         </ul>
