@@ -118,13 +118,13 @@ def reset_password():
         totp_seed = get_totp_seed(username)
         totp_validate = pyotp.totp.TOTP(totp_seed)
         if totp_code != totp_validate.now():
-            return redirect(url_for('login_page'))
+            return redirect(url_for('login'))
         # encrypt the new password
         new_password_hash = hash_password(request.form['password'])
         # update the password for the user
         change_password_hash(username, new_password_hash)
-        
-    return redirect(url_for('login_page'))
+
+    return redirect(url_for('login'))
 
 @app.route("/account")
 def account_page():
