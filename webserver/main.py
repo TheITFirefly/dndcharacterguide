@@ -123,8 +123,8 @@ def reset_password():
         new_password_hash = hash_password(request.form['password'])
         # update the password for the user
         change_password_hash(username, new_password_hash)
-
-    return redirect(url_for('login'))
+        return redirect(url_for('login'))
+    return render_template('reset-password')
 
 @app.route("/account")
 def account_page():
