@@ -124,7 +124,7 @@ def reset_password():
         # update the password for the user
         change_password_hash(username, new_password_hash)
         return redirect(url_for('login'))
-    return render_template('reset-password')
+    return render_template('reset-password.html')
 
 @app.route("/account")
 def account_page():
