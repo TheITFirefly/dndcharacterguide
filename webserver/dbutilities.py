@@ -220,4 +220,32 @@ def add_skill(character_id, name, modifier, proficiency):
 
     conn.commit()
     conn.close()
-    return None
+    return
+
+def add_party(name):
+    """
+    Adds a party to the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "INSERT INTO Party (Name) VALUES (%s);"
+    cursor.execute(query, (name))
+
+    conn.commit()
+    conn.close()
+    return
+
+def get_parties():
+    """
+    Shows all parties that a user can join
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT Name FROM Party;"
+    cursor.execute(query)
+    result = cursor.fetchall()
+    conn.close()
+
+    return result

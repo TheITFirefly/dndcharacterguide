@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -215,26 +215,38 @@ def totp_page():
         return redirect(url_for('account_page'))
     return render_template('setup-totp.html', totp_url=totp_url)
 
-# @app.route("/party")
-# def party_page():
-#     """
-#     Page containing buttons to join a party or create a party
-#     """
-#     return
+@app.route("/party", methods=['GET'])
+def party_page():
+    """
+    Page containing buttons to join a party or create a party
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    if request.method == 'GET':
+        party_list = get_parties()
+    return render_template('party.html', party_list=party_list)
 
-# @app.route("/party/create")
-# def create_party():
-#     """
-#     Page containing form to create party
-#     """
-#     return
+@app.route("/party/create", methods=['GET', 'POST'])
+def create_party():
+    """
+    Page containing form to create party
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    if request.method == 'POST':
+        party_name = request.form['name']
+        add_party(party_name)
+        
+    return render_template('create-party.html')
 
-# @app.route("/party/join")
-# def join_party():
-#     """
-#     Page containing available parties to join
-#     """
-#     return
+@app.route("/party/join")
+def join_party():
+    """
+    Page containing available parties to join
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    return "You are currently authenticated"
 
 @app.route("/characters")
 def characters():
