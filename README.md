@@ -23,10 +23,11 @@ Jordan's template for is available at [this github repo](https://github.com/jord
 
 # TODO
 
-- [ ] Characters overview
+- [ ] Characters overview (still need edit,view,delete buttons for each character.html)
+- [ ] Viewing individual characters
 - [ ] Editing individual characters
 - [ ] Deleting characters
-- [ ] Password resets
+- [X] Password resets
 - [ ] Party creation
 - [ ] Party joining
 - [ ] Party deletion?
