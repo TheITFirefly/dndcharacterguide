@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -242,7 +242,7 @@ def totp_page():
 #     """
 #     return
 
-@app.route("/characters")
+@app.route("/characters", methods=['GET'])
 def characters():
     """
     Page containing characters in a grid
@@ -255,14 +255,41 @@ def characters():
         - edit button (approx. href /characters/edit/{{ character_id }})
         - delete button (approx. href /characters/delete/{{ character_id }})
     """
-    return "You are currently authenticated"
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    
+    if request.method == 'GET':
+        character_list = get_user_characters(session['username'])
+        races = get_table_contents('Race')
+        classes = get_table_contents('Class')
+        backgrounds = get_table_contents('Background')
+        
+        result = []
+        
+        for character in character_list:
+            character_name = character[0]
+            race_name = get_race_name(character[1])
+            class_name = get_class_name(character[2])
+            background_name = get_background_name(character[3])
+            result.append((character_name, race_name, class_name, background_name))
 
-# @app.route("/characters/show/<int:character_id>")
-# def get_character_details():
-#     """
-#     Page to show details for a particular character
-#     """
-#     return
+    
+        return render_template('character.html', character_list=result)
+
+
+@app.route("/characters/show/<int:character_id>", methods=['GET'])
+def get_character_details(character_id):
+    """
+    Page to show details for a particular character
+    """
+    if not user_authenticated():
+        return redirect(url_for('login'))
+    
+    if request.method == 'GET':
+        character_info = get_one_character(character_id)
+        
+        return render_template('character.html', character_list=character_info)
+    
 
 @app.route("/characters/create", methods=['GET', 'POST'])
 def create_character():

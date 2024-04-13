@@ -221,3 +221,91 @@ def add_skill(character_id, name, modifier, proficiency):
     conn.commit()
     conn.close()
     return None
+
+
+def get_one_character(character_id):
+    """
+    Show character info for one single character.
+    
+    Args:
+        character_id (int): unique character ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE ID = %s"
+    cursor.execute(query, (character_id,))
+    result = cursor.fetchall()
+    conn.close()
+    
+    return result
+
+
+def get_user_characters(username):
+    """
+    Show all characters linked to specific user ID
+
+    Args:
+        user_id (int): unique user ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE username = %s"
+    cursor.execute(query, (username,))
+    result = cursor.fetchall()
+    conn.close()
+    
+    return result
+
+
+def get_race_name(race_id):
+    """
+    Get the RaceName associated with race ID
+
+    Args:
+        race_id (int): unique Race ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT RaceName FROM Race WHERE RaceID = %s"
+    cursor.execute(query, (race_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    return result[0]
+
+def get_class_name(class_id):
+    """
+    Get the classname associated with race ID
+
+    Args:
+        class_id (int): unique class ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT ClassName FROM Class WHERE ClassID = %s"
+    cursor.execute(query, (class_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    return result[0]
+
+def get_background_name(background_id):
+    """
+    Get the background associated with race ID
+
+    Args:
+        background_id (int): unique background ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT BackgroundName FROM Background WHERE BackgroundID = %s"
+    cursor.execute(query, (background_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    return result[0]
