@@ -249,3 +249,16 @@ def get_parties():
     conn.close()
 
     return result
+
+def update_user_party_id(partyID, username):
+    """
+    Updates a user to have a PartyID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "UPDATE Users SET ID = %s WHERE username = %s;"
+    cursor.execute(query, (partyID, username,))
+    conn.commit()
+    conn.close()
+    return

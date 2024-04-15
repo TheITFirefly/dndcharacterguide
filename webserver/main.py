@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party, update_user_party_id
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -239,14 +239,20 @@ def create_party():
         
     return render_template('create-party.html')
 
-@app.route("/party/join")
+@app.route("/party/join", methods=['GET', 'POST'])
 def join_party():
     """
     Page containing available parties to join
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    return "You are currently authenticated"
+    if request.method =='POST':
+        party_id = request.form['party']
+        print(type(party_id))
+        print(party_id)
+        update_user_party_id(party_id, session['username'])
+    party_list = get_parties()
+    return render_template('join-party.html', party_list=party_list)
 
 @app.route("/characters")
 def characters():

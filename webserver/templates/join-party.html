@@ -19,18 +19,15 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Parties</h1>
-    <div class="row">
+<form method="post">
+    <div class="form-group">
+        <label for="party">Select Party:</label>
+        <select class="form-control" id="party" name="party">
         {% for party in party_list %}
-            <div class="col-md-4">
-                <div class="card" style="margin-bottom: 50px;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ party[0] }}</h5>
-                    </div>
-                </div>
-            </div>
+            <option value="{{ party[1] }}">{{ party[0] }}</option>
         {% endfor %}
+        </select>
     </div>
-</div>
-{% endblock%}
+    <input class="btn btn-default" type="submit" value="Join Party">
+</form>
+{% endblock %}
