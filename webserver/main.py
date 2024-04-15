@@ -361,6 +361,36 @@ def create_character():
 #     """
 #     return
 
+@app.route("/reference")
+def ref():
+    """
+    Contains pointers to each different reference page
+    """
+    return render_template('ref.html')
+
+@app.route("/reference/races")
+def race_ref():
+    """
+    Page containing table showing page number in the PHB for each race
+    """
+    races = get_table_contents('Race')
+    return render_template('race-ref.html', races=races)
+
+@app.route("/reference/classes")
+def class_ref():
+    """
+    Page containing table showing page number in the PHB for each class
+    """
+    classes = get_table_contents('Class')
+    return render_template('class-ref.html', classes=classes)
+
+@app.route("/reference/backgrounds")
+def background_ref():
+    """
+    Page containing table showing page number in the PHB for each background
+    """
+    backgrounds = get_table_contents('Background')
+    return render_template('background-ref.html', backgrounds=backgrounds)
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True) # TODO: Students PLEASE remove debug=True when put in production

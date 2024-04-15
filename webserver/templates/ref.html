@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li class="active"><a href="/reference">Reference</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<p>An excellent guide to filling out your character sheet is available <a href="https://www.youtube.com/watch?v=IVAJrYOOtwI" target="_blank">here</a>.</p>
+<p>References to page numbers for each race, class, and background are available at their respective links below</p>
+<a href="/reference/races"><button class="btn btn-default">Races</button></a>
+<a href="/reference/classes"><button class="btn btn-default">Classes</button></a>
+<a href="/reference/backgrounds"><button class="btn btn-default">Backgrounds</button></a>
+{% endblock %}
