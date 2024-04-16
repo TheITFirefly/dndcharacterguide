@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name, get_saving_throws, get_skills, delete_character, get_character_name
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -251,45 +251,39 @@ def characters():
         - race
         - class
         - background
-        - view button (approx. href /characters/show/{{ character_id }})
-        - edit button (approx. href /characters/edit/{{ character_id }})
-        - delete button (approx. href /characters/delete/{{ character_id }})
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    
     if request.method == 'GET':
         character_list = get_user_characters(session['username'])
-        races = get_table_contents('Race')
-        classes = get_table_contents('Class')
-        backgrounds = get_table_contents('Background')
-        
         result = []
-        
         for character in character_list:
             character_name = character[0]
             race_name = get_race_name(character[1])
             class_name = get_class_name(character[2])
             background_name = get_background_name(character[3])
-            result.append((character_name, race_name, class_name, background_name))
-
-    
+            character_id = character[4]
+            result.append((character_name, race_name, class_name, background_name, character_id))
         return render_template('character.html', character_list=result)
 
 
-@app.route("/characters/show/<int:character_id>", methods=['GET'])
+@app.route("/characters/show/<int:character_id>")
 def get_character_details(character_id):
     """
     Page to show details for a particular character
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    
-    if request.method == 'GET':
-        character_info = get_one_character(character_id)
-        
-        return render_template('character.html', character_list=character_info)
-    
+    character = get_one_character(character_id)
+    character_name = character[1]
+    ability_scores = character[2:8]
+    prof_bon = character[8]
+    race_name = get_race_name(character[11])
+    class_name = get_class_name(character[12])
+    background_name = get_background_name(character[10])
+    saving_throws = get_saving_throws(character_id)
+    skills = get_skills(character_id)
+    return render_template('show-character.html', character_name=character_name,character_race=race_name,character_class=class_name,character_background=background_name,prof_bon=prof_bon, ability_scores=ability_scores,saving_throws=saving_throws, skills=skills)
 
 @app.route("/characters/create", methods=['GET', 'POST'])
 def create_character():
@@ -347,19 +341,25 @@ def create_character():
     backgrounds = get_table_contents('Background')
     return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, saving_throws=saving_throws, skills=skills)
 
-# @app.route("/characters/edit/<int:character_id>")
-# def edit_character_details(character_id):
-#     """
-#     Page to edit details for a particular character
-#     """
-#     return
+@app.route("/characters/edit/<int:character_id>", methods=['GET', 'POST'])
+def edit_character_details(character_id):
+    """
+    Page to edit details for a particular character
+    """
+    return render_template('edit-character.html')
 
-# @app.route("/characters/delete/<int:character_id>")
-# def delete_character(character_id):
-#     """
-#     Make sure to confirm deletion, like account deletion page
-#     """
-#     return
+@app.route("/characters/delete/<int:character_id>", methods=['GET', 'POST'])
+def character_deletion_page(character_id):
+    """
+    Page to confirm deletion of a character
+    """
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        if confirmation == 'yes':
+            delete_character(character_id)
+        return redirect(url_for('characters'))
+    char_name = get_character_name(character_id)
+    return render_template('delete-character.html', char_name=char_name)
 
 @app.route("/reference")
 def ref():

@@ -1,0 +1,86 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li class='active'><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/reference">Reference</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<h1>{{ character_name }}</h1>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Demographic Info</h3>
+        </div>
+        <div class="panel-body">
+            <p>Race: {{ character_race }}</p>
+            <p>Class: {{ character_class }}</p>
+            <p>Background: {{ character_background }}</p>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Proficiency bonus</h3>
+        </div>
+        <div class="panel-body">
+            <p>{{ prof_bon }}</p>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Ability scores</h3>
+        </div>
+        <div class="panel-body">
+            <p>Strength: {{ ability_scores[0] }}</p>
+            <p>Dexterity: {{ ability_scores[1] }}</p>
+            <p>Constitution: {{ ability_scores[2] }}</p>
+            <p>Intelligence: {{ ability_scores[3] }}</p>
+            <p>Wisdom: {{ ability_scores[4] }}</p>
+            <p>Charisma: {{ ability_scores[5] }}</p>
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Saving Throws</h3>
+        </div>
+        <div class="panel-body">
+            {% for throw in saving_throws %}
+            <p>{{ throw[0] }} Modifier: {{ throw[1] }}</p>
+            <ul>Proficient: {% if throw[2] == 1 %}True{% else %}False{% endif %}</ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+<div class="col-md-4">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title">Skills</h3>
+        </div>
+        <div class="panel-body">
+            {% for skill in skills %}
+            <p>{{ skill[0] }} Modifier: {{ skill[1] }}</p>
+            <ul>Proficient: {% if skill[2] == 1 %}True{% else %}False{% endif %}</ul>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
