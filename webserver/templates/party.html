@@ -1,0 +1,27 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>You are a member of the {{ party_list[partyID-1][1] }} party!</h1>
+    <a href="/party/create"><button class="btn btn-default">Create a Party</button></a>
+    <a href="/party/join"><button class="btn btn-default">Join a Party</button></a>
+</div>
+{% endblock%}
