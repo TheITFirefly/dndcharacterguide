@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party, update_user_party_id
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party, update_user_party_id, get_user_party_id
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -222,9 +222,10 @@ def party_page():
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    if request.method == 'GET':
-        party_list = get_parties()
-    return render_template('party.html', party_list=party_list)
+    user = session['username']
+    partyID = get_user_party_id(user)
+    party_list = get_parties()
+    return render_template('party.html', party_list=party_list, partyID=partyID)
 
 @app.route("/party/create", methods=['GET', 'POST'])
 def create_party():
@@ -236,7 +237,8 @@ def create_party():
     if request.method == 'POST':
         party_name = request.form['name']
         add_party(party_name)
-        
+        return redirect(url_for('join_party'))
+   
     return render_template('create-party.html')
 
 @app.route("/party/join", methods=['GET', 'POST'])
@@ -248,9 +250,9 @@ def join_party():
         return redirect(url_for('login'))
     if request.method =='POST':
         party_id = request.form['party']
-        print(type(party_id))
-        print(party_id)
         update_user_party_id(party_id, session['username'])
+        return redirect(url_for('party_page'))
+
     party_list = get_parties()
     return render_template('join-party.html', party_list=party_list)
 

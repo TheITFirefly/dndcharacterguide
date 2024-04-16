@@ -20,17 +20,8 @@
 
 {% block content %}
 <div class="container">
-    <h1>Parties</h1>
-    <div class="row">
-        {% for party in party_list %}
-            <div class="col-md-4">
-                <div class="card" style="margin-bottom: 50px;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ party[0] }}</h5>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
+    <h1>You are a member of the {{ party_list[partyID-1][1] }} party!</h1>
+    <a href="/party/create"><button class="btn btn-default">Create a Party</button></a>
+    <a href="/party/join"><button class="btn btn-default">Join a Party</button></a>
 </div>
 {% endblock%}

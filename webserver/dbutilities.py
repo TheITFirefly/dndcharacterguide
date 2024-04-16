@@ -230,7 +230,7 @@ def add_party(name):
     cursor = conn.cursor()
 
     query = "INSERT INTO Party (Name) VALUES (%s);"
-    cursor.execute(query, (name))
+    cursor.execute(query, (name,))
 
     conn.commit()
     conn.close()
@@ -243,7 +243,7 @@ def get_parties():
     conn = initialize_connection()
     cursor = conn.cursor()
 
-    query = "SELECT Name FROM Party;"
+    query = "SELECT * FROM Party;"
     cursor.execute(query)
     result = cursor.fetchall()
     conn.close()
@@ -261,4 +261,17 @@ def update_user_party_id(partyID, username):
     cursor.execute(query, (partyID, username,))
     conn.commit()
     conn.close()
-    return
+    
+def get_user_party_id(user):
+    """
+    Gets a users party ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "SELECT ID FROM Users WHERE username = %s;"
+    cursor.execute(query, (user,))
+    result = cursor.fetchall()
+    conn.close()
+
+    return result[0][0]

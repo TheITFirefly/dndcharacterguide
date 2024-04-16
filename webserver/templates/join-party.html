@@ -24,7 +24,7 @@
         <label for="party">Select Party:</label>
         <select class="form-control" id="party" name="party">
         {% for party in party_list %}
-            <option value="{{ party[1] }}">{{ party[0] }}</option>
+            <option value="{{ party[0] }}">{{ party[1] }}</option>
         {% endfor %}
         </select>
     </div>
