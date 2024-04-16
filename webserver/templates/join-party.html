@@ -1,0 +1,33 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="/account">Account</a></li>
+        <li><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="party">Select Party:</label>
+        <select class="form-control" id="party" name="party">
+        {% for party in party_list %}
+            <option value="{{ party[0] }}">{{ party[1] }}</option>
+        {% endfor %}
+        </select>
+    </div>
+    <input class="btn btn-default" type="submit" value="Join Party">
+</form>
+{% endblock %}
