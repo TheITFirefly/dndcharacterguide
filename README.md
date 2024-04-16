@@ -31,6 +31,3 @@ You may want to look at the [flask quick start](https://flask.palletsprojects.co
 - [X] Party creation
 - [X] Party joining
 - [X] Improved setup instructions in readme
-
-## Helpful resources
-- [Editing/deleting characters](https://flask.palletsprojects.com/en/2.3.x/quickstart/#variable-rules)
