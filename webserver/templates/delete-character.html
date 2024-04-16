@@ -1,6 +1,6 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}D&D Character Guide - Delete Account{% endblock %}
+{% block title %}D&D Character Guide{% endblock %}
 
 {% block navbar %}
 <nav class="navbar navbar-default">
@@ -9,8 +9,8 @@
         <a class="navbar-brand" href="/">D&D Character Guide</a>
       </div>
       <ul class="nav navbar-nav">
-        <li class="active"><a href="/account">Account</a></li>
-        <li><a href="/characters">Characters</a></li>
+        <li><a href="/account">Account</a></li>
+        <li class='active'><a href="/characters">Characters</a></li>
         <li><a href="/party">Party</a></li>
         <li><a href="/reference">Reference</a></li>
         <li><a href="/logout">Log Out</a></li>
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block content %}
-<p>Are you sure you want to delete your account</p>
+<p>Are you sure you want to delete {{ char_name }}</p>
 <form id="deleteForm" method="POST">
     <div class="radio">
         <label><input type="radio" name="confirmation" value="yes">Yes</label>
@@ -28,6 +28,6 @@
     <div class="radio">
         <label><input type="radio" name="confirmation" value="no" checked>No</label>
     </div>
-    <button class="btn btn-danger" type="submit">Delete Account</button>
+    <button class="btn btn-danger" type="submit">Confirm</button>
 </form>
 {% endblock %}

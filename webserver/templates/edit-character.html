@@ -1,0 +1,90 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}D&D Character Guide - Account{% endblock %}
+
+{% block navbar %}
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="/">D&D Character Guide</a>
+      </div>
+      <ul class="nav navbar-nav">
+        <li><a href="/account">Account</a></li>
+        <li class="active"><a href="/characters">Characters</a></li>
+        <li><a href="/party">Party</a></li>
+        <li><a href="/reference">Reference</a></li>
+        <li><a href="/logout">Log Out</a></li>
+      </ul>
+    </div>
+  </nav>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+    <div class="form-group">
+        <label for="name">Character Name:</label>
+        <div class="input-group">
+            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+            <input id="name" type="username" class="form-control" name="name" value="{{ name }}" required>
+        </div>
+        <label for="race">Select Race:</label>
+        <select class="form-control" id="race" name="race">
+            {% for race in races %}
+                {% if race[2] == race_id %}
+                    <option value="{{ race[2] }}" selected="selected">{{ race[0] }}</option>
+                {% else %}
+                    <option value="{{ race[2] }}">{{ race[0] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <label for="class">Select Class:</label>
+        <select class="form-control" id="class" name="class">
+            {% for char_class in classes %}
+                {% if char_class[2] == class_id %}
+                    <option value="{{ char_class[2] }}" selected="selected">{{ char_class[0] }}</option>
+                {% else %}
+                    <option value="{{ char_class[2] }}">{{ char_class[0] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <label for="background">Select Background:</label>
+        <select class="form-control" id="background" name="background">
+            {% for background in backgrounds %}
+                {% if background[2] == background_id %}
+                    <option value="{{ background[2] }}" selected="selected">{{ background[0] }}</option>
+                {% else %}
+                    <option value="{{ background[2] }}">{{ background[0] }}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+    </div>
+
+    {% for index in range(saving_throws|length) %}
+    {% set saving_throw = saving_throws[index] %}
+    {% set ability_score = ability_scores[index] %}
+    <label for="{{ saving_throw[0] }}">{{ saving_throw[0] }}:</label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="{{ saving_throw[0] }}" type="number" min="1" max="30" class="form-control" name="{{ saving_throw[0] }}" value="{{ ability_score }}" required>
+    </div>
+    <div class="checkbox">
+        <label><input type="checkbox" class="checkbox" value="true" name="{{ saving_throw[0] }}-proficiency" {% if saving_throw[2] %} checked {% endif %}>{{ saving_throw[0] }} Proficiency</label>
+    </div>
+    {% endfor %}
+
+    <label>Skill Proficiency:</label>
+    {% for skill in skills %}
+        <div class="checkbox">
+            <label><input type="checkbox" class="checkbox" value="true" name="{{ skill[0] }}-proficiency" {% if skill[2] %} checked {% endif %}>{{ skill[0] }} Proficiency</label>
+        </div>
+    {% endfor %}
+    
+    
+    <label for="proficiency-bonus">Proficiency Bonus:</label>
+    <div class="input-group">
+        <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+        <input id="proficiency-bonus" type="number" min="-5" max="10" class="form-control" name="proficiency-bonus" value="{{ prof_bon }}" required>
+    </div>
+    <input class="btn btn-default" type="submit" value="Update Character">
+</form>
+{% endblock %}

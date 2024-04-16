@@ -90,6 +90,21 @@ def delete_user(username):
 
     conn.commit()
     conn.close()
+    return
+
+def delete_character(char_id):
+    """
+    Deletes a character from the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "DELETE FROM Characters WHERE ID=%s"
+    cursor.execute(query, (char_id,))
+
+    conn.commit()
+    conn.close()
+    return
 
 def add_totp(username, seed):
     """
@@ -208,6 +223,58 @@ def add_saving_throw(character_id, name, modifier, proficiency):
 
     return None
 
+def get_saving_throws(character_id):
+    """
+    Gets saving throws for a particular character
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    query = "SELECT * from Saving_Throws WHERE ID=%s;"
+    cursor.execute(query,(character_id,))
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+def get_skills(character_id):
+    """
+    Gets skills for a particular character
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    query = "SELECT * from Skills WHERE ID=%s;"
+    cursor.execute(query,(character_id,))
+    result = cursor.fetchall()
+    conn.close()
+    return result
+
+def update_skill():
+    """
+    """
+    return
+
+def update_saving_throw():
+    """
+    """
+    return
+
+def update_character():
+    """
+    """
+    return
+
+def update_character_details(character_id, name, race_id, class_id, background_id, ability_scores, proficiency_bonus):
+    """
+    Update details for a character in the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "UPDATE Characters SET CharacterName = %s, RaceID = %s, ClassID = %s, BackgroundID = %s, Strength_Ability_Score = %s, Dexterity_Ability_Score = %s, Constitution_Ability_Score = %s, Intelligence_Ability_Score = %s, Wisdom_Ability_Score = %s, Charisma_Ability_Score = %s, Proficiency_bonus = %s WHERE ID = %s;"
+    cursor.execute(query, (name, race_id, class_id, background_id, ability_scores[0], ability_scores[1], ability_scores[2], ability_scores[3], ability_scores[4], ability_scores[5], proficiency_bonus, character_id))
+
+    conn.commit()
+    conn.close()
+
 def add_skill(character_id, name, modifier, proficiency):
     """
     Add a skill to a character
@@ -287,13 +354,13 @@ def get_one_character(character_id):
     """
     conn = initialize_connection()
     cursor = conn.cursor()
-    
-    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE ID = %s"
+
+    query = "SELECT * FROM Characters WHERE ID = %s"
     cursor.execute(query, (character_id,))
     result = cursor.fetchall()
     conn.close()
-    
-    return result
+
+    return result[0]
 
 
 def get_user_characters(username):
@@ -306,7 +373,7 @@ def get_user_characters(username):
     conn = initialize_connection()
     cursor = conn.cursor()
     
-    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID FROM Characters WHERE username = %s"
+    query = "SELECT CharacterName, RaceID, ClassID, BackgroundID, ID FROM Characters WHERE username = %s"
     cursor.execute(query, (username,))
     result = cursor.fetchall()
     conn.close()
@@ -326,6 +393,23 @@ def get_race_name(race_id):
     
     query = "SELECT RaceName FROM Race WHERE RaceID = %s"
     cursor.execute(query, (race_id,))
+    result = cursor.fetchone()
+    conn.close()
+    
+    return result[0]
+
+def get_character_name(character_id):
+    """
+    Get the Character Name associated with character ID
+
+    Args:
+        race_id (int): unique Race ID
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+    
+    query = "SELECT CharacterName FROM Characters WHERE ID = %s"
+    cursor.execute(query, (character_id,))
     result = cursor.fetchone()
     conn.close()
     

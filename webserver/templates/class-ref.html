@@ -12,7 +12,7 @@
         <li><a href="/account">Account</a></li>
         <li><a href="/characters">Characters</a></li>
         <li><a href="/party">Party</a></li>
-        <li><a href="/reference">Reference</a></li>
+        <li class="active"><a href="/reference">Reference</a></li>
         <li><a href="/logout">Log Out</a></li>
       </ul>
     </div>
@@ -20,8 +20,20 @@
 {% endblock %}
 
 {% block content %}
-<h3>Character creation information is available by clicking reference<h3>
-<h5>Please log in or create an account if you want to track your characters:</h5>
-<a href="/login"><button class="btn">Login</button></a>
-<a href="/create-account"><button class="btn">Create Account</button></a>
+<table class="table table-striped table-hover table-responsive">
+    <thead>
+      <tr>
+        <th>Class name</th>
+        <th>Page in player handbook</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for class in classes %}
+      <tr>
+        <td>{{ class[0] }}</td>
+        <td>{{ class[1] }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 {% endblock %}

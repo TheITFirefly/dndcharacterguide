@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_parties, add_party, update_user_party_id, get_user_party_id, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, 
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -271,45 +271,39 @@ def characters():
         - race
         - class
         - background
-        - view button (approx. href /characters/show/{{ character_id }})
-        - edit button (approx. href /characters/edit/{{ character_id }})
-        - delete button (approx. href /characters/delete/{{ character_id }})
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    
     if request.method == 'GET':
         character_list = get_user_characters(session['username'])
-        races = get_table_contents('Race')
-        classes = get_table_contents('Class')
-        backgrounds = get_table_contents('Background')
-        
         result = []
-        
         for character in character_list:
             character_name = character[0]
             race_name = get_race_name(character[1])
             class_name = get_class_name(character[2])
             background_name = get_background_name(character[3])
-            result.append((character_name, race_name, class_name, background_name))
-
-    
+            character_id = character[4]
+            result.append((character_name, race_name, class_name, background_name, character_id))
         return render_template('character.html', character_list=result)
 
 
-@app.route("/characters/show/<int:character_id>", methods=['GET'])
+@app.route("/characters/show/<int:character_id>")
 def get_character_details(character_id):
     """
     Page to show details for a particular character
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    
-    if request.method == 'GET':
-        character_info = get_one_character(character_id)
-        
-        return render_template('character.html', character_list=character_info)
-    
+    character = get_one_character(character_id)
+    character_name = character[1]
+    ability_scores = character[2:8]
+    prof_bon = character[8]
+    race_name = get_race_name(character[11])
+    class_name = get_class_name(character[12])
+    background_name = get_background_name(character[10])
+    saving_throws = get_saving_throws(character_id)
+    skills = get_skills(character_id)
+    return render_template('show-character.html', character_name=character_name,character_race=race_name,character_class=class_name,character_background=background_name,prof_bon=prof_bon, ability_scores=ability_scores,saving_throws=saving_throws, skills=skills)
 
 @app.route("/characters/create", methods=['GET', 'POST'])
 def create_character():
@@ -367,20 +361,112 @@ def create_character():
     backgrounds = get_table_contents('Background')
     return render_template('create-character.html', races=races, classes=classes, backgrounds=backgrounds, saving_throws=saving_throws, skills=skills)
 
-# @app.route("/characters/edit/<int:character_id>")
-# def edit_character_details(character_id):
-#     """
-#     Page to edit details for a particular character
-#     """
-#     return
+@app.route("/characters/edit/<int:character_id>", methods=['GET', 'POST'])
+def edit_character_details(character_id):
+    """
+    Page to edit details for a particular character
+    """
+    character = get_one_character(character_id)
+    character_name = character[1]
+    ability_scores = character[2:8]
+    prof_bon = character[8]
+    race_id = character[11]
+    class_id = character[12]
+    background_id = character[10]
+    saving_throws = get_saving_throws(character_id)
+    skills = get_skills(character_id)
+    races = get_table_contents('Race')
+    classes = get_table_contents('Class')
+    backgrounds = get_table_contents('Background')    
 
-# @app.route("/characters/delete/<int:character_id>")
-# def delete_character(character_id):
-#     """
-#     Make sure to confirm deletion, like account deletion page
-#     """
-#     return
+    if request.method == 'POST':
+    # Get path to JSON
+        data_path = os.path.dirname(os.path.dirname(SCRIPT_PATH))
+        data_path = os.path.join(data_path, 'data', 'skills-and-saving-throws.json')
+        # Load Skills and saving throws from JSON
+        with open(data_path, encoding="utf-8") as file:
+            loaded_json = json.load(file)
+        abilities = loaded_json['Saving throws']
+        skills = loaded_json['Skills']
+        saving_throws = loaded_json['Saving throws']
+        # Delete the old character
+        delete_character(character_id)
+        # Gather data needed to create character
+        character_name = request.form['name']
+        character_race = request.form['race']
+        character_class = request.form['class']
+        character_background = request.form['background']
+        character_proficiency_bonus = int(request.form['proficiency-bonus'])
+        ability_scores = []
+        for ability in abilities:
+            ability_scores.append(request.form[ability])
+        character_id = add_character(character_name, character_race, character_class, character_background, ability_scores, character_proficiency_bonus, session['username'])
 
+        for throw in saving_throws:
+            # Determine if proficiency
+            proficiency_key = f"{throw}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[throw])
+            if proficiency:
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_saving_throw(character_id, throw, modifier, proficiency)
+
+        for skill, ability_score in skills.items():
+            # Determine if proficiency
+            proficiency_key = f"{skill}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[ability_score])
+            if proficiency:
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_skill(character_id, skill, modifier, proficiency)
+        return redirect(url_for('characters'))
+    return render_template('edit-character.html', races=races, classes=classes, backgrounds=backgrounds, name=character_name, race_id=race_id, class_id=class_id, background_id=background_id, saving_throws=saving_throws, skills=skills, prof_bon=prof_bon, ability_scores=ability_scores)
+
+@app.route("/characters/delete/<int:character_id>", methods=['GET', 'POST'])
+def character_deletion_page(character_id):
+    """
+    Page to confirm deletion of a character
+    """
+    if request.method == 'POST':
+        confirmation = request.form.get('confirmation')
+        if confirmation == 'yes':
+            delete_character(character_id)
+        return redirect(url_for('characters'))
+    char_name = get_character_name(character_id)
+    return render_template('delete-character.html', char_name=char_name)
+
+@app.route("/reference")
+def ref():
+    """
+    Contains pointers to each different reference page
+    """
+    return render_template('ref.html')
+
+@app.route("/reference/races")
+def race_ref():
+    """
+    Page containing table showing page number in the PHB for each race
+    """
+    races = get_table_contents('Race')
+    return render_template('race-ref.html', races=races)
+
+@app.route("/reference/classes")
+def class_ref():
+    """
+    Page containing table showing page number in the PHB for each class
+    """
+    classes = get_table_contents('Class')
+    return render_template('class-ref.html', classes=classes)
+
+@app.route("/reference/backgrounds")
+def background_ref():
+    """
+    Page containing table showing page number in the PHB for each background
+    """
+    backgrounds = get_table_contents('Background')
+    return render_template('background-ref.html', backgrounds=backgrounds)
 
 if __name__ == "__main__":
     app.run(port=8080, debug=True) # TODO: Students PLEASE remove debug=True when put in production

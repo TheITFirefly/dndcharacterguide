@@ -12,30 +12,37 @@
         <li><a href="/account">Account</a></li>
         <li class='active'><a href="/characters">Characters</a></li>
         <li><a href="/party">Party</a></li>
+        <li><a href="/reference">Reference</a></li>
+        <li><a href="/logout">Log Out</a></li>
       </ul>
     </div>
-  </nav>
+</nav>
 {% endblock %}
-
 
 {% block content %}
 <div class="container">
-    <h1>Character Items</h1>
+    <h1>Characters</h1>
     <div class="row">
         {% for character in character_list %}
             <div class="col-md-4">
-                <div class="card" style="margin-bottom: 20px;">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ character[0] }}</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Character Overview:</h6>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ character[0] }}</h3>
+                    </div>
+                    <div class="panel-body">
                         <p>Race: {{ character[1] }}</p>
                         <p>Class: {{ character[2] }}</p>
                         <p>Background: {{ character[3] }}</p>
+                    </div>
+                    <div class="panel-footer">
+                      <a href="/characters/show/{{ character[4] }}" class="btn btn-primary">View</a>
+                      <a href="/characters/edit/{{ character[4] }}" class="btn btn-warning">Edit</a>
+                      <a href="/characters/delete/{{ character[4] }}" class="btn btn-danger">Delete</a>
                     </div>
                 </div>
             </div>
         {% endfor %}
     </div>
 </div>
-{% endblock%}
-
+<a href="/characters/create" class="btn btn-success btn-lg" style="position: fixed; bottom: 20px; right: 20px;">Create New Character</a>
+{% endblock %}
