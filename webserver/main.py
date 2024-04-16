@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_user_characters, get_race_name, get_class_name, get_background_name, get_one_character, get_saving_throws, get_skills, get_user_party_id, get_parties, update_user_party_id, add_party
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_user_characters, get_race_name, get_class_name, get_background_name, get_one_character, get_saving_throws, get_skills, get_user_party_id, get_parties, update_user_party_id, add_party, get_character_name
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
