@@ -11,7 +11,7 @@ import pyotp
 from flask import Flask, session, render_template, request, redirect, url_for, flash, get_flashed_messages
 from flask_qrcode import QRcode
 from flask_bootstrap import Bootstrap
-from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name, get_saving_throws, get_skills, delete_character, get_character_name
+from dbutilities import is_user, get_password_hash, change_password_hash, create_user, delete_user, totp_enabled, add_totp, get_totp_seed, get_table_contents, add_character, add_saving_throw, add_skill, get_one_character, get_user_characters, get_race_name, get_class_name, get_background_name, get_saving_throws, get_skills, delete_character, get_character_name, update_saving_throw, update_skill, update_character
 from serverutilities import hash_password, correct_password, user_authenticated, calculate_modifier
 from dotenv import load_dotenv
 
@@ -346,7 +346,63 @@ def edit_character_details(character_id):
     """
     Page to edit details for a particular character
     """
-    return render_template('edit-character.html')
+    character = get_one_character(character_id)
+    character_name = character[1]
+    ability_scores = character[2:8]
+    prof_bon = character[8]
+    race_id = character[11]
+    class_id = character[12]
+    background_id = character[10]
+    saving_throws = get_saving_throws(character_id)
+    skills = get_skills(character_id)
+    races = get_table_contents('Race')
+    classes = get_table_contents('Class')
+    backgrounds = get_table_contents('Background')    
+
+    if request.method == 'POST':
+    # Get path to JSON
+        data_path = os.path.dirname(os.path.dirname(SCRIPT_PATH))
+        data_path = os.path.join(data_path, 'data', 'skills-and-saving-throws.json')
+        # Load Skills and saving throws from JSON
+        with open(data_path, encoding="utf-8") as file:
+            loaded_json = json.load(file)
+        abilities = loaded_json['Saving throws']
+        skills = loaded_json['Skills']
+        saving_throws = loaded_json['Saving throws']
+        # Delete the old character
+        delete_character(character_id)
+        # Gather data needed to create character
+        character_name = request.form['name']
+        character_race = request.form['race']
+        character_class = request.form['class']
+        character_background = request.form['background']
+        character_proficiency_bonus = int(request.form['proficiency-bonus'])
+        ability_scores = []
+        for ability in abilities:
+            ability_scores.append(request.form[ability])
+        character_id = add_character(character_name, character_race, character_class, character_background, ability_scores, character_proficiency_bonus, session['username'])
+
+        for throw in saving_throws:
+            # Determine if proficiency
+            proficiency_key = f"{throw}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[throw])
+            if proficiency:
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_saving_throw(character_id, throw, modifier, proficiency)
+
+        for skill, ability_score in skills.items():
+            # Determine if proficiency
+            proficiency_key = f"{skill}-proficiency"
+            proficiency = request.form.get(proficiency_key) == 'true'
+            ability_score = int(request.form[ability_score])
+            if proficiency:
+                modifier = calculate_modifier(ability_score) + character_proficiency_bonus
+            modifier = calculate_modifier(ability_score)
+            add_skill(character_id, skill, modifier, proficiency)
+        return redirect(url_for('characters'))
+    return render_template('edit-character.html', races=races, classes=classes, backgrounds=backgrounds, name=character_name, race_id=race_id, class_id=class_id, background_id=background_id, saving_throws=saving_throws, skills=skills, prof_bon=prof_bon, ability_scores=ability_scores)
 
 @app.route("/characters/delete/<int:character_id>", methods=['GET', 'POST'])
 def character_deletion_page(character_id):

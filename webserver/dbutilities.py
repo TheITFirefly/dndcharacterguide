@@ -247,6 +247,34 @@ def get_skills(character_id):
     conn.close()
     return result
 
+def update_skill():
+    """
+    """
+    return
+
+def update_saving_throw():
+    """
+    """
+    return
+
+def update_character():
+    """
+    """
+    return
+
+def update_character_details(character_id, name, race_id, class_id, background_id, ability_scores, proficiency_bonus):
+    """
+    Update details for a character in the database
+    """
+    conn = initialize_connection()
+    cursor = conn.cursor()
+
+    query = "UPDATE Characters SET CharacterName = %s, RaceID = %s, ClassID = %s, BackgroundID = %s, Strength_Ability_Score = %s, Dexterity_Ability_Score = %s, Constitution_Ability_Score = %s, Intelligence_Ability_Score = %s, Wisdom_Ability_Score = %s, Charisma_Ability_Score = %s, Proficiency_bonus = %s WHERE ID = %s;"
+    cursor.execute(query, (name, race_id, class_id, background_id, ability_scores[0], ability_scores[1], ability_scores[2], ability_scores[3], ability_scores[4], ability_scores[5], proficiency_bonus, character_id))
+
+    conn.commit()
+    conn.close()
+
 def add_skill(character_id, name, modifier, proficiency):
     """
     Add a skill to a character
