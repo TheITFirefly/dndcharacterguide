@@ -133,7 +133,7 @@ def account_page():
     """
     if not user_authenticated():
         return redirect(url_for('login'))
-    return render_template('account.html')
+    return render_template('account.html',page_title='Account', active_page='account')
 
 @app.route("/account/delete-account", methods=['GET','POST'])
 def delete_account():
